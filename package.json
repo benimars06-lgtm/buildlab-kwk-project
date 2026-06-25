@@ -9,7 +9,7 @@
     "lint": "eslint",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "seed": "npx tsx src/db/seed.ts",
+    "seed": "node --env-file=.env.local --import tsx src/db/seed.ts",
     "db:push": "npx drizzle-kit push"
   },
   "dependencies": {
