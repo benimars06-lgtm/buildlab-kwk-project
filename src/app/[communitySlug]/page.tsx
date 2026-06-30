@@ -56,6 +56,7 @@ export default async function CommunityPage({ params }: CommunityPageProps) {
 
       {/* ====================================================== */}
       {/* TICKET #1: Posts list is implemented below.             */}
+      {/* REMAINING: Resources will also go on this page.    */}
       {/* See Tickets #3, #4, #6, and #10.                       */}
       {/* ====================================================== */}
       <section>
