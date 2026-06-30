@@ -54,6 +54,10 @@ export default async function CommunityPage({ params }: CommunityPageProps) {
 
       <CommunityNav slug={community.slug} activeTab="home" />
 
+      {/* ====================================================== */}
+      {/* TICKET #1: Posts list is implemented below.             */}
+      {/* See Tickets #3, #4, #6, and #10.                       */}
+      {/* ====================================================== */}
       <section>
         <h2 className="mb-4 text-xl font-semibold text-gray-900">Posts</h2>
 
