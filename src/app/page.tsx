@@ -11,7 +11,6 @@ export default async function HomePage() {
       <div className="mb-8 flex items-start justify-between">
         <div>
           <h1 className="text-3xl font-bold text-gray-900">Community Hub 🏘️</h1>
-          <p className="mt-1 text-gray-700">Welcome to our community</p>
           <p className="mt-2 text-gray-600">
             Find your community. Connect with people who share your interests.
           </p>
