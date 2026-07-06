@@ -10,7 +10,7 @@ This is your team's project for the BuildLab. The app is partially built — you
 # 1. Install dependencies
 pnpm install
 
-# 2. Start the development server/ What runs the Website
+# 2. Start the development server
 pnpm run dev
 ```
 
