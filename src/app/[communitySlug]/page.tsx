@@ -1,5 +1,5 @@
 import { db } from "@/db";
-import { communities, posts, users } from "@/db/schema";
+import { communities, posts, resources, users } from "@/db/schema";
 import { desc, eq } from "drizzle-orm";
 import { notFound } from "next/navigation";
 import Link from "next/link";
@@ -45,6 +45,11 @@ export default async function CommunityPage({ params }: CommunityPageProps) {
     .where(eq(posts.communityId, community.id))
     .orderBy(desc(posts.createdAt));
 
+  const communityResources = await db
+    .select()
+    .from(resources)
+    .where(eq(resources.communityId, community.id));
+
   return (
     <div>
       <div className="mb-8">
@@ -89,6 +94,45 @@ export default async function CommunityPage({ params }: CommunityPageProps) {
             <p className="text-lg font-medium text-gray-400">No posts yet</p>
             <p className="mt-2 text-sm text-gray-400">
               Posts for this community will appear here.
+            </p>
+          </div>
+        )}
+      </section>
+
+      <section className="mt-10">
+        <h2 className="mb-4 text-xl font-semibold text-gray-900">Resources</h2>
+
+        {communityResources.length > 0 ? (
+          <div className="space-y-4">
+            {communityResources.map((resource) => (
+              <div
+                key={resource.id}
+                className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm"
+              >
+                <h3 className="text-lg font-semibold text-gray-900">
+                  {resource.title}
+                </h3>
+                <p className="mt-2 text-sm text-gray-600">
+                  {resource.description}
+                </p>
+                <a
+                  href={resource.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-4 inline-block text-sm font-medium text-blue-600 hover:text-blue-700 hover:underline"
+                >
+                  {resource.title}
+                </a>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="rounded-lg border-2 border-dashed border-gray-300 bg-white p-12 text-center">
+            <p className="text-lg font-medium text-gray-400">
+              No resources yet
+            </p>
+            <p className="mt-2 text-sm text-gray-400">
+              Resources for this community will appear here.
             </p>
           </div>
         )}
