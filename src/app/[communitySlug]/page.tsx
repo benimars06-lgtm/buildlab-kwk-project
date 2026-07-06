@@ -121,7 +121,7 @@ export default async function CommunityPage({ params }: CommunityPageProps) {
                   rel="noopener noreferrer"
                   className="mt-4 inline-block text-sm font-medium text-blue-600 hover:text-blue-700 hover:underline"
                 >
-                  {resource.url}
+                  {resource.title}
                 </a>
               </div>
             ))}
