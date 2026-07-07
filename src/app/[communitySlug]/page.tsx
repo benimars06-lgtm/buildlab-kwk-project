@@ -5,6 +5,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import CommunityNav from "@/components/CommunityNav";
 import type { CommunityPageProps } from "@/types";
+import NewPostForm from "@/components/NewPostForm";
 
 // ============================================================
 // COMMUNITY HOMEPAGE
@@ -39,6 +40,7 @@ export default async function CommunityPage({ params }: CommunityPageProps) {
       title: posts.title,
       createdAt: posts.createdAt,
       authorName: users.name,
+      communityId: posts.communityId,
     })
     .from(posts)
     .innerJoin(users, eq(posts.authorId, users.id))
@@ -66,6 +68,10 @@ export default async function CommunityPage({ params }: CommunityPageProps) {
       {/* ====================================================== */}
       <section>
         <h2 className="mb-4 text-xl font-semibold text-gray-900">Posts</h2>
+
+        <div className="mb-6">
+          <NewPostForm communityId={community.id} />
+        </div>
 
         {communityPosts.length > 0 ? (
           <div className="space-y-4">

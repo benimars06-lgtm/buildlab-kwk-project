@@ -1,20 +1,13 @@
 import { NextResponse } from "next/server";
 import { db } from "@/db";
 import { posts } from "@/db/schema";
-import { getAuthUserId } from "@/lib/auth-session";
 
 export async function POST(request: Request) {
-  const authorId = getAuthUserId(request);
+  const { title, content, communityId, authorId } = await request.json();
 
-  if (!authorId) {
-    return NextResponse.json({ error: "Not logged in." }, { status: 401 });
-  }
-
-  const { title, content, communityId } = await request.json();
-
-  if (!title || !content || !communityId) {
+  if (!title || !content || !communityId || !authorId) {
     return NextResponse.json(
-      { error: "title, content, and communityId are required." },
+      { error: "title, content, communityId, and authorId are required." },
       { status: 400 },
     );
   }

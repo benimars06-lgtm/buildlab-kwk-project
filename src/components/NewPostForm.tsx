@@ -1,19 +1,68 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import Button from "@/components/Button";
+import { useAuth } from "@/lib/auth";
 
 type NewPostFormProps = {
-  action?: (formData: FormData) => void | Promise<void>;
+  communityId: string;
 };
 
-export default function NewPostForm({ action }: NewPostFormProps) {
+export default function NewPostForm({ communityId }: NewPostFormProps) {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const [pending, setPending] = useState(false);
+  const router = useRouter();
+  const { user } = useAuth();
+
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    setError(null);
+
+    if (!user) {
+      setError("Please log in before creating a post.");
+      return;
+    }
+
+    setPending(true);
+
+    const formData = new FormData(e.currentTarget);
+    const title = formData.get("title") as string;
+    const content = formData.get("content") as string;
+
+    try {
+      const res = await fetch("/api/posts", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          title,
+          content,
+          communityId,
+          authorId: user.id,
+        }),
+      });
+
+      if (!res.ok) {
+        const data = await res.json();
+        setError(data.error ?? "Something went wrong.");
+        return;
+      }
+
+      setTitle("");
+      setContent("");
+      router.refresh();
+    } catch {
+      setError("Something went wrong.");
+    } finally {
+      setPending(false);
+    }
+  }
 
   return (
     <form
-      action={action}
+      onSubmit={handleSubmit}
       className="space-y-4 rounded-lg border border-gray-200 bg-white p-6"
     >
       <div>
@@ -54,8 +103,10 @@ export default function NewPostForm({ action }: NewPostFormProps) {
         />
       </div>
 
+      {error && <p className="text-sm text-red-600">{error}</p>}
+
       <div className="flex justify-end pt-2">
-        <Button label="Create Post" type="submit" />
+        <Button label="Create Post" type="submit" disabled={pending} />
       </div>
     </form>
   );
