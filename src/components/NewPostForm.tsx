@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Button from "@/components/Button";
 import { useAuth } from "@/lib/auth";
@@ -24,8 +24,9 @@ export default function NewPostForm({ communityId }: NewPostFormProps) {
     setError(null);
   }
 
-  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
+  async function handleSubmit() {
+    if (pending) return;
+
     setError(null);
     setPending(true);
 
@@ -73,7 +74,13 @@ export default function NewPostForm({ communityId }: NewPostFormProps) {
               Create a new post
             </h2>
 
-            <form onSubmit={handleSubmit} className="space-y-4">
+            <form
+              onSubmit={(event) => {
+                event.preventDefault();
+                void handleSubmit();
+              }}
+              className="space-y-4"
+            >
               <div>
                 <label
                   htmlFor="post-title"
