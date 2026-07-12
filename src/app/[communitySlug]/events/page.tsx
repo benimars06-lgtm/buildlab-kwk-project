@@ -2,6 +2,7 @@ import { db } from "@/db";
 import { communities, events } from "@/db/schema";
 import { asc, eq } from "drizzle-orm";
 import { notFound } from "next/navigation";
+import Button from "@/components/Button";
 import CommunityNav from "@/components/CommunityNav";
 import type { CommunityPageProps } from "@/types";
 
@@ -11,7 +12,7 @@ import type { CommunityPageProps } from "@/types";
 // This page will display all events for a community.
 //
 // YOUR TICKETS WILL ADD:
-// - Ticket #2 (Person B): Fetch and display the list of events
+// ✅ Ticket #2 (Person B): Fetch and display the list of events/
 // - Ticket #5 (Person B): Add a "New Event" button and form
 // - Ticket #9 (Person B): Add RSVP functionality to each event
 // ============================================================
@@ -57,6 +58,10 @@ export default async function EventsPage({ params }: CommunityPageProps) {
 
       <section>
         <h2 className="mb-4 text-xl font-semibold text-gray-900">Events</h2>
+
+        <div className="mb-6">
+          <Button label="+ New Event" />
+        </div>
 
         {communityEvents.length > 0 ? (
           <div className="space-y-4">
