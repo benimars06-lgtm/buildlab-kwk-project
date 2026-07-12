@@ -5,13 +5,18 @@ import { useRouter } from "next/navigation";
 import Button from "@/components/Button";
 import { useAuth } from "@/lib/auth";
 
-export default function NewEventForm() {
+type NewEventFormProps = {
+  communityId: string;
+};
+
+export default function NewEventForm({ communityId }: NewEventFormProps) {
   const [open, setOpen] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [pending, setPending] = useState(false);
   const router = useRouter();
   const { user } = useAuth();
 
-  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setError(null);
 
@@ -20,8 +25,42 @@ export default function NewEventForm() {
       return;
     }
 
-    setOpen(false);
-    router.refresh();
+    const formData = new FormData(e.currentTarget);
+    const title = formData.get("title") as string;
+    const description = formData.get("description") as string;
+    const location = formData.get("location") as string;
+    const startTime = formData.get("startTime") as string;
+    const endTime = formData.get("endTime") as string;
+
+    setPending(true);
+
+    try {
+      const response = await fetch("/api/events", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: title,
+          description,
+          location,
+          startTime: new Date(startTime).toISOString(),
+          endTime: new Date(endTime).toISOString(),
+          communityId,
+        }),
+      });
+
+      if (!response.ok) {
+        const data = await response.json();
+        setError(data.error ?? "Something went wrong.");
+        return;
+      }
+
+      setOpen(false);
+      router.refresh();
+    } catch {
+      setError("Something went wrong.");
+    } finally {
+      setPending(false);
+    }
   }
 
   function handleCancel() {
@@ -132,7 +171,7 @@ export default function NewEventForm() {
                   variant="secondary"
                   onClick={handleCancel}
                 />
-                <Button label="Create" type="submit" />
+                <Button label="Create" type="submit" disabled={pending} />
               </div>
             </form>
           </div>

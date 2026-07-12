@@ -2,7 +2,6 @@ import { db } from "@/db";
 import { communities, events } from "@/db/schema";
 import { asc, eq } from "drizzle-orm";
 import { notFound } from "next/navigation";
-import Button from "@/components/Button";
 import CommunityNav from "@/components/CommunityNav";
 import NewEventForm from "@/components/NewEventForm";
 import type { CommunityPageProps } from "@/types";
@@ -14,7 +13,7 @@ import type { CommunityPageProps } from "@/types";
 //
 // YOUR TICKETS WILL ADD:
 // ✅ Ticket #2 (Person B): Fetch and display the list of events/
-// - Ticket #5 (Person B): Add a "New Event" button and form
+// ✅ Ticket #5 (Person B): Add a "New Event" button and form
 // - Ticket #9 (Person B): Add RSVP functionality to each event
 // ============================================================
 
@@ -61,8 +60,7 @@ export default async function EventsPage({ params }: CommunityPageProps) {
         <h2 className="mb-4 text-xl font-semibold text-gray-900">Events</h2>
 
         <div className="mb-6">
-          <NewEventForm />
-          <Button label="+ New Event" />
+          <NewEventForm communityId={community.id} />
         </div>
 
         {communityEvents.length > 0 ? (
@@ -78,9 +76,7 @@ export default async function EventsPage({ params }: CommunityPageProps) {
                 <p className="mt-2 text-gray-700">{event.description}</p>
                 <div className="mt-4 space-y-2 text-sm text-gray-600">
                   <p>
-                    <span className="font-medium text-gray-900">
-                      Location:
-                    </span>{" "}
+                    <span className="font-medium text-gray-900">Location:</span>{" "}
                     {event.location}
                   </p>
                   <p>
