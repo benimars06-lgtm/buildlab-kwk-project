@@ -2,8 +2,8 @@ import { db } from "@/db";
 import { communities, events } from "@/db/schema";
 import { asc, eq } from "drizzle-orm";
 import { notFound } from "next/navigation";
-import Button from "@/components/Button";
 import CommunityNav from "@/components/CommunityNav";
+import NewEventForm from "@/components/NewEventForm";
 import type { CommunityPageProps } from "@/types";
 
 // ============================================================
@@ -60,7 +60,7 @@ export default async function EventsPage({ params }: CommunityPageProps) {
         <h2 className="mb-4 text-xl font-semibold text-gray-900">Events</h2>
 
         <div className="mb-6">
-          <Button label="+ New Event" />
+          <NewEventForm />
         </div>
 
         {communityEvents.length > 0 ? (
