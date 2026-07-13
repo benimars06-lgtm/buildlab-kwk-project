@@ -4,6 +4,7 @@ import { desc, eq } from "drizzle-orm";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import CommunityNav from "@/components/CommunityNav";
+import NewResourceForm from "@/components/NewResourceForm";
 import type { CommunityPageProps } from "@/types";
 
 // ============================================================
@@ -99,7 +100,10 @@ export default async function CommunityPage({ params }: CommunityPageProps) {
       </section>
 
       <section className="mt-10">
-        <h2 className="mb-4 text-xl font-semibold text-gray-900">Resources</h2>
+        <div className="mb-4 flex items-center justify-between">
+          <h2 className="text-xl font-semibold text-gray-900">Resources</h2>
+          <NewResourceForm communityId={community.id} />
+        </div>
 
         {communityResources.length > 0 ? (
           <div className="space-y-4">
