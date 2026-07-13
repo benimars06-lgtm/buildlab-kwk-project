@@ -66,7 +66,6 @@ export default async function CommunityPage({ params }: CommunityPageProps) {
       {/* ====================================================== */}
       <section>
         <h2 className="mb-4 text-xl font-semibold text-gray-900">Posts</h2>
-
         {communityPosts.length > 0 ? (
           <div className="space-y-4">
             {communityPosts.map((post) => (
