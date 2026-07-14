@@ -16,6 +16,15 @@ export default function NewEventForm({ communityId }: NewEventFormProps) {
   const router = useRouter();
   const { user } = useAuth();
 
+  function handleOpen() {
+    if (!user) {
+      router.replace("/");
+      return;
+    }
+
+    setOpen(true);
+  }
+
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setError(null);
@@ -70,7 +79,7 @@ export default function NewEventForm({ communityId }: NewEventFormProps) {
 
   return (
     <>
-      <Button label="+ New Event" onClick={() => setOpen(true)} />
+      <Button label="+ New Event" onClick={handleOpen} />
 
       {open && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
