@@ -5,3 +5,12 @@
 This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` before writing any code. Heed deprecation notices.
 
 <!-- END:nextjs-agent-rules -->
+
+# Instructions for Codex
+
+## How to work with me
+
+- If anything in my request in unclear, ask clarifying questions before proceeding. Do not guess.
+- Always use Tailwind CSS for styling. Do not use inline styles or CSS modules.
+- Our auth system is client-side. Use the useAuth hook from src/lib/auth.tsx.
+- When creating new files, follow the existing project structure.
