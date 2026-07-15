@@ -68,3 +68,14 @@ export const comments = pgTable("comments", {
     .references(() => users.id),
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
+
+export const bookmarks = pgTable("bookmarks", {
+  id: text("id").primaryKey(),
+  userId: text("user_id")
+    .notNull()
+    .references(() => users.id),
+  postId: text("post_id")
+    .notNull()
+    .references(() => posts.id),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+});
