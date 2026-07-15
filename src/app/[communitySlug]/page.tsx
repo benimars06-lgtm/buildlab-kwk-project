@@ -4,6 +4,7 @@ import { desc, eq } from "drizzle-orm";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import CommunityNav from "@/components/CommunityNav";
+import NewPostForm from "@/components/NewPostForm";
 import NewResourceForm from "@/components/NewResourceForm";
 import type { CommunityPageProps } from "@/types";
 
@@ -11,12 +12,11 @@ import type { CommunityPageProps } from "@/types";
 // COMMUNITY HOMEPAGE
 // ============================================================
 // This is the main page for a specific community.
-// Right now it just shows the community name and description.
 //
 // YOUR TICKETS WILL ADD:
 // - Ticket #1 (Person A): Display a list of posts here ✅
-// - Ticket #3 (Person C): Display a list of resources here
-// - Ticket #4 (Person A): Add a "New Post" button and form
+// - Ticket #3 (Person C): Display a list of resources here ✅
+// - Ticket #4 (Person A): Add a "New Post" button and form ✅
 // - Ticket #6 (Person C): Add an "Add Resource" button and form
 // - Ticket #10 (Person B): Improve the layout and styling
 // ============================================================
@@ -61,12 +61,14 @@ export default async function CommunityPage({ params }: CommunityPageProps) {
       <CommunityNav slug={community.slug} activeTab="home" />
 
       {/* ====================================================== */}
-      {/* TICKET #1: Posts list is implemented below.             */}
-      {/* REMAINING: Resources will also go on this page.    */}
-      {/* See Tickets #3, #4, #6, and #10.                       */}
+      {/* See Tickets #6, and #10.                       */}
       {/* ====================================================== */}
       <section>
-        <h2 className="mb-4 text-xl font-semibold text-gray-900">Posts</h2>
+        <div className="mb-4 flex items-start justify-between gap-4">
+          <h2 className="text-xl font-semibold text-gray-900">Posts</h2>
+          <NewPostForm communityId={community.id} />
+        </div>
+
         {communityPosts.length > 0 ? (
           <div className="space-y-4">
             {communityPosts.map((post) => (
