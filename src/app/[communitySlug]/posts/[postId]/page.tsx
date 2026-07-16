@@ -49,7 +49,7 @@ export default async function PostDetailPage({ params }: PostPageProps) {
     notFound();
   }
 
-  // Fetch comments attached to this post's id using a where and the username attached to the post using an inner join
+  // Fetch comments for this post (newest first), including commenter name and avatar.
   const postComments = await db
     .select({
       id: comments.id,
