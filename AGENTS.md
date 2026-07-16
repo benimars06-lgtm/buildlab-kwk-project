@@ -11,3 +11,5 @@ This version has breaking changes — APIs, conventions, and file structure may 
 ## How to work with me
 
 - If anything in my request is unclear or ambiguous, ask clarifying questions before proceeding. Do not guess.
+
+- Always evaluate and include the available TaillwindCSS around the affected files and the whole project inself when creating a component in space.

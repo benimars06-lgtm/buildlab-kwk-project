@@ -4,6 +4,7 @@ import { asc, eq } from "drizzle-orm";
 import { notFound } from "next/navigation";
 import CommunityNav from "@/components/CommunityNav";
 import NewEventForm from "@/components/NewEventForm";
+import RSVPButton from "@/components/RSVPButton";
 import type { CommunityPageProps } from "@/types";
 
 // ============================================================
@@ -103,6 +104,9 @@ export default async function EventsPage({ params }: CommunityPageProps) {
                       })}
                     </time>
                   </p>
+                </div>
+                <div className="mt-4 flex justify-end">
+                  <RSVPButton />
                 </div>
               </article>
             ))}
