@@ -1,4 +1,4 @@
-import { pgTable, text, timestamp } from "drizzle-orm/pg-core";
+import { pgTable, primaryKey, text, timestamp } from "drizzle-orm/pg-core";
 
 // ============================================================
 // DATABASE SCHEMA — Community Hub
@@ -57,6 +57,19 @@ export const events = pgTable("events", {
     .notNull()
     .references(() => communities.id),
 });
+
+export const eventsRSVP = pgTable(
+  "events_rsvp",
+  {
+    eventId: text("event_id")
+      .notNull()
+      .references(() => events.id, { onDelete: "cascade" }),
+    userId: text("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+  },
+  (table) => [primaryKey({ columns: [table.eventId, table.userId] })]
+);
 
 export const resources = pgTable("resources", {
   id: text("id").primaryKey(),

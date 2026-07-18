@@ -1,10 +1,12 @@
 import { db } from "@/db";
-import { communities, events } from "@/db/schema";
+import { communities, events, eventsRSVP, users } from "@/db/schema";
 import { asc, eq } from "drizzle-orm";
+import { cookies } from "next/headers";
 import { notFound } from "next/navigation";
 import CommunityNav from "@/components/CommunityNav";
 import NewEventForm from "@/components/NewEventForm";
 import RSVPButton from "@/components/RSVPButton";
+import { DEV_AUTH_COOKIE_NAME } from "@/lib/auth-session";
 import type { CommunityPageProps } from "@/types";
 
 // ============================================================
@@ -43,6 +45,31 @@ export default async function EventsPage({ params }: CommunityPageProps) {
     .from(events)
     .where(eq(events.communityId, community.id))
     .orderBy(asc(events.startTime));
+
+  const cookieUserId = (await cookies()).get(DEV_AUTH_COOKIE_NAME)?.value;
+  const attendingEventIds = new Set<string>();
+
+  if (cookieUserId) {
+    const currentUser = await db
+      .select({ id: users.id })
+      .from(users)
+      .where(eq(users.id, cookieUserId))
+      .then((rows) => rows[0]);
+
+    // If a dev-auth cookie exists, look up the corresponding user and fetch their RSVPs.
+    // For each RSVP row, add the eventId to attendingEventIds so the UI can mark which events the user is attending.
+    if (currentUser) {
+      const currentUserRSVPs = await db
+        .select({ eventId: eventsRSVP.eventId })
+        .from(eventsRSVP)
+        .where(eq(eventsRSVP.userId, currentUser.id));
+
+      // (used as RSVPButton's initialAttending).
+      for (const rsvp of currentUserRSVPs) {
+        attendingEventIds.add(rsvp.eventId);
+      }
+    }
+  }
 
   return (
     <div>
@@ -106,7 +133,10 @@ export default async function EventsPage({ params }: CommunityPageProps) {
                   </p>
                 </div>
                 <div className="mt-4 flex justify-end">
-                  <RSVPButton />
+                  <RSVPButton
+                    eventId={event.id}
+                    initialAttending={attendingEventIds.has(event.id)}
+                  />
                 </div>
               </article>
             ))}
