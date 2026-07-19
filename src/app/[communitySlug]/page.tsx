@@ -63,10 +63,6 @@ export default async function CommunityPage({ params }: CommunityPageProps) {
       {/* See Tickets #6, and #10.                       */}
       {/* ====================================================== */}
       <section>
-        <div className="mb-4 flex items-start justify-between gap-4">
-          <h2 className="text-xl font-semibold text-gray-900">Posts</h2>
-          <NewPostForm communityId={community.id} />
-        </div>
 
         {communityPosts.length > 0 ? (
           <div className="space-y-4">
