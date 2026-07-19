@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type SubmitEvent } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Button from "@/components/Button";
 import { useAuth } from "@/lib/auth";
@@ -16,7 +16,7 @@ export default function NewCommentForm({ postId }: NewCommentFormProps) {
   const [error, setError] = useState<string | null>(null);
   const [pending, setPending] = useState(false);
 
-  async function handleSubmit(event: SubmitEvent<HTMLFormElement>) {
+  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
     if (pending || !user) return;
