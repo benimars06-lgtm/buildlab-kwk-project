@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { db } from "@/db";
 import { events, eventsRSVP, users } from "@/db/schema";
 import { getAuthUserId } from "@/lib/auth-session";
-import { eq } from "drizzle-orm";
+import { asc, eq } from "drizzle-orm";
 
 type RSVPRouteContext = {
   params: Promise<{ eventId: string }>;
@@ -77,7 +77,18 @@ export async function POST(request: Request, { params }: RSVPRouteContext) {
       );
     }
 
-    return NextResponse.json(rsvp, { status: 201 });
+    const attendees = await db
+      .select({
+        id: users.id,
+        name: users.name,
+        image: users.image,
+      })
+      .from(eventsRSVP)
+      .innerJoin(users, eq(eventsRSVP.userId, users.id))
+      .where(eq(eventsRSVP.eventId, eventId))
+      .orderBy(asc(users.name), asc(users.id));
+
+    return NextResponse.json({ attendees }, { status: 201 });
   } catch {
     return NextResponse.json(
       { error: "Unable to RSVP for this event." },

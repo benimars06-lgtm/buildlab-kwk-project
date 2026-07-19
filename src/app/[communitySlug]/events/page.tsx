@@ -5,25 +5,9 @@ import { cookies } from "next/headers";
 import { notFound } from "next/navigation";
 import CommunityNav from "@/components/CommunityNav";
 import NewEventForm from "@/components/NewEventForm";
-import RSVPButton from "@/components/RSVPButton";
+import RSVPPanel, { type EventAttendee } from "@/components/RSVPPanel";
 import { DEV_AUTH_COOKIE_NAME } from "@/lib/auth-session";
 import type { CommunityPageProps } from "@/types";
-
-type EventAttendee = {
-  id: string;
-  name: string;
-  image: string | null;
-};
-
-function getInitials(name: string) {
-  return name
-    .trim()
-    .split(/\s+/)
-    .slice(0, 2)
-    .map((part) => part[0])
-    .join("")
-    .toUpperCase();
-}
 
 // ============================================================
 // EVENTS PAGE
@@ -182,43 +166,11 @@ export default async function EventsPage({ params }: CommunityPageProps) {
                     </p>
                   </div>
 
-                  {isAttending && eventAttendees.length > 0 ? (
-                    <section className="mt-4 border-t border-gray-100 pt-4">
-                      <h4 className="text-sm font-semibold text-gray-900">
-                        List of Attendees
-                      </h4>
-                      <ul className="mt-3 list-disc space-y-2 pl-5 text-sm text-gray-700">
-                        {eventAttendees.map((attendee) => (
-                          <li key={attendee.id} className="pl-1">
-                            <span className="inline-flex items-center gap-2 align-middle">
-                              {attendee.image ? (
-                                <img
-                                  src={attendee.image}
-                                  alt={attendee.name}
-                                  className="h-7 w-7 rounded-full object-cover"
-                                />
-                              ) : (
-                                <span
-                                  aria-hidden="true"
-                                  className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-blue-100 text-xs font-semibold text-blue-700"
-                                >
-                                  {getInitials(attendee.name)}
-                                </span>
-                              )}
-                              <span>{attendee.name}</span>
-                            </span>
-                          </li>
-                        ))}
-                      </ul>
-                    </section>
-                  ) : null}
-
-                  <div className="mt-4 flex justify-end">
-                    <RSVPButton
-                      eventId={event.id}
-                      initialAttending={isAttending}
-                    />
-                  </div>
+                  <RSVPPanel
+                    eventId={event.id}
+                    initialAttending={isAttending}
+                    initialAttendees={eventAttendees}
+                  />
                 </article>
               );
             })}
