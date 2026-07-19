@@ -35,17 +35,6 @@ export const posts = pgTable("posts", {
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 
-export const bookmarks = pgTable("bookmarks", {
-  id: text("id").primaryKey(),
-  userId: text("user_id")
-    .notNull()
-    .references(() => users.id),
-  postId: text("post_id")
-    .notNull()
-    .references(() => posts.id),
-  createdAt: timestamp("created_at").notNull().defaultNow(),
-});
-
 export const events = pgTable("events", {
   id: text("id").primaryKey(),
   name: text("name").notNull(),

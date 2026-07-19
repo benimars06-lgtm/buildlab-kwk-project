@@ -4,7 +4,6 @@ import { desc, eq } from "drizzle-orm";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import CommunityNav from "@/components/CommunityNav";
-import NewPostForm from "@/components/NewPostForm";
 import NewResourceForm from "@/components/NewResourceForm";
 import type { CommunityPageProps } from "@/types";
 
