@@ -1,8 +1,10 @@
 import { db } from "@/db";
-import { posts, users, communities } from "@/db/schema";
-import { eq, and } from "drizzle-orm";
+import { comments, posts, users, communities } from "@/db/schema";
+import { eq, and, desc } from "drizzle-orm";
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import CommentList from "@/components/CommentList";
+import NewCommentForm from "@/components/NewCommentForm";
 import type { PostPageProps } from "@/types";
 
 // ============================================================
@@ -47,6 +49,19 @@ export default async function PostDetailPage({ params }: PostPageProps) {
     notFound();
   }
 
+  // Fetch comments for this post (newest first), including commenter name and avatar.
+  const postComments = await db
+    .select({
+      id: comments.id,
+      commenterName: users.name,
+      profilePicture: users.image,
+      commentText: comments.text,
+    })
+    .from(comments)
+    .innerJoin(users, eq(comments.authorId, users.id))
+    .where(eq(comments.postId, post.id))
+    .orderBy(desc(comments.createdAt));
+
   return (
     <div>
       <Link
@@ -78,18 +93,17 @@ export default async function PostDetailPage({ params }: PostPageProps) {
         <p className="mt-4 whitespace-pre-wrap text-gray-700">{post.content}</p>
       </article>
 
-      {/* ====================================================== */}
-      {/* PLACEHOLDER: Comments will go here.                    */}
-      {/* See Ticket #7 (Person A).                              */}
-      {/* ====================================================== */}
-      <div className="mt-6 rounded-lg border-2 border-dashed border-gray-300 bg-white p-8 text-center">
-        <p className="text-lg font-medium text-gray-400">
-          💬 Comments will appear here
-        </p>
-        <p className="mt-2 text-sm text-gray-400">
-          See Ticket #7 to build this!
-        </p>
-      </div>
+      <section className="mt-6">
+        <h2 className="mb-4 text-xl font-semibold text-gray-900">Comments</h2>
+        {postComments.length > 0 ? (
+          <CommentList comments={postComments} />
+        ) : (
+          <p className="rounded-lg border border-gray-200 bg-white p-6 text-center text-sm text-gray-500">
+            No comments yet.
+          </p>
+        )}
+        <NewCommentForm postId={post.id} />
+      </section>
     </div>
   );
 }
