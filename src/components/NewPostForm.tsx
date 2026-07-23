@@ -10,42 +10,48 @@ type NewPostFormProps = {
 };
 
 export default function NewPostForm({ communityId }: NewPostFormProps) {
-  const { user } = useAuth();
-  const router = useRouter();
-  const [open, setOpen] = useState(false);
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [pending, setPending] = useState(false);
+  const router = useRouter();
+  const { user } = useAuth();
 
-  function closeModal() {
-    if (pending) return;
-    setOpen(false);
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
     setError(null);
-  }
 
-  async function handleSubmit() {
-    if (pending) return;
+    if (!user) {
+      setError("Please log in before creating a post.");
+      return;
+    }
 
-    setError(null);
     setPending(true);
 
+    const formData = new FormData(e.currentTarget);
+    const title = formData.get("title") as string;
+    const content = formData.get("content") as string;
+
     try {
-      const response = await fetch("/api/posts", {
+      const res = await fetch("/api/posts", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ title, content, communityId }),
+        body: JSON.stringify({
+          title,
+          content,
+          communityId,
+          authorId: user.id,
+        }),
       });
 
-      if (!response.ok) {
-        const data = await response.json();
+      if (!res.ok) {
+        const data = await res.json();
         setError(data.error ?? "Something went wrong.");
         return;
       }
 
       setTitle("");
       setContent("");
-      setOpen(false);
       router.refresh();
     } catch {
       setError("Something went wrong.");
@@ -55,89 +61,53 @@ export default function NewPostForm({ communityId }: NewPostFormProps) {
   }
 
   return (
-    <div className="flex flex-col items-end gap-2">
-      <Button
-        label="+ New Post"
-        onClick={() => setOpen(true)}
-        disabled={!user}
-      />
-      {!user && (
-        <p className="text-right text-xs text-gray-500">
-          Log in to create a post.
-        </p>
-      )}
+    <form
+      onSubmit={handleSubmit}
+      className="space-y-4 rounded-lg border border-gray-200 bg-white p-6"
+    >
+      <div>
+        <label
+          htmlFor="title"
+          className="block text-sm font-medium text-gray-900"
+        >
+          Title
+        </label>
+        <input
+          id="title"
+          name="title"
+          type="text"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          required
+          className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+          placeholder="Post title"
+        />
+      </div>
 
-      {open && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
-          <div className="w-full max-w-md rounded-xl bg-white p-6 shadow-xl">
-            <h2 className="mb-4 text-xl font-semibold text-gray-900">
-              Create a new post
-            </h2>
+      <div>
+        <label
+          htmlFor="content"
+          className="block text-sm font-medium text-gray-900"
+        >
+          Content
+        </label>
+        <textarea
+          id="content"
+          name="content"
+          value={content}
+          onChange={(e) => setContent(e.target.value)}
+          required
+          rows={6}
+          className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+          placeholder="What would you like to share?"
+        />
+      </div>
 
-            <form
-              onSubmit={(event) => {
-                event.preventDefault();
-                void handleSubmit();
-              }}
-              className="space-y-4"
-            >
-              <div>
-                <label
-                  htmlFor="post-title"
-                  className="block text-sm font-medium text-gray-900"
-                >
-                  Title
-                </label>
-                <input
-                  id="post-title"
-                  name="title"
-                  type="text"
-                  required
-                  value={title}
-                  onChange={(event) => setTitle(event.target.value)}
-                  className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
-                  placeholder="What do you want to share?"
-                />
-              </div>
+      {error && <p className="text-sm text-red-600">{error}</p>}
 
-              <div>
-                <label
-                  htmlFor="post-content"
-                  className="block text-sm font-medium text-gray-900"
-                >
-                  Content
-                </label>
-                <textarea
-                  id="post-content"
-                  name="content"
-                  required
-                  rows={5}
-                  value={content}
-                  onChange={(event) => setContent(event.target.value)}
-                  className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
-                  placeholder="Write your post..."
-                />
-              </div>
-
-              {error && <p className="text-sm text-red-600">{error}</p>}
-
-              <div className="flex justify-end gap-3 pt-2">
-                <Button
-                  label="Cancel"
-                  variant="secondary"
-                  onClick={closeModal}
-                  disabled={pending}
-                />
-                <Button
-                  label={pending ? "Creating..." : "Create Post"}
-                  type="submit"
-                  disabled={pending}
-                />
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
-    </div>
+      <div className="flex justify-end pt-2">
+        <Button label="Create Post" type="submit" disabled={pending} />
+      </div>
+    </form>
   );
 }
