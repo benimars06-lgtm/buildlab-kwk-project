@@ -53,57 +53,70 @@ export default async function CommunityPage({ params }: CommunityPageProps) {
 
   return (
     <div>
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900">{community.name}</h1>
-        <p className="mt-2 text-gray-600">{community.description}</p>
-      </div>
+      <section className="mb-8 rounded-xl border border-blue-100 bg-blue-50 px-6 py-8">
+        <p className="text-sm font-semibold uppercase tracking-wide text-blue-600">
+          Welcome to
+        </p>
+        <h1 className="mt-2 text-3xl font-bold text-gray-900">
+          {community.name}
+        </h1>
+        <p className="mt-3 max-w-3xl text-gray-700">
+          {community.description}
+        </p>
+        <p className="mt-4 text-sm font-medium text-blue-700">
+          Connect with curious minds and discover what&apos;s possible together.
+        </p>
+      </section>
 
       <CommunityNav slug={community.slug} activeTab="home" />
 
       {/* ====================================================== */}
       {/* See Tickets #6, and #10.                       */}
       {/* ====================================================== */}
-      <section>
-        {communityPosts.length > 0 ? (
-          <div className="space-y-4">
-            {communityPosts.map((post) => (
-              <Link
-                key={post.id}
-                href={`/${community.slug}/posts/${post.id}`}
-                className="block rounded-lg border border-gray-200 bg-white p-6 shadow-sm transition-shadow hover:shadow-md"
-              >
-                <h3 className="text-lg font-semibold text-gray-900 hover:text-blue-600">
-                  {post.title}
-                </h3>
-                <p className="mt-2 text-sm text-gray-500">
-                  By {post.authorName} ·{" "}
-                  {post.createdAt.toLocaleDateString("en-US", {
-                    month: "short",
-                    day: "numeric",
-                    year: "numeric",
-                  })}
-                </p>
-              </Link>
-            ))}
-          </div>
-        ) : (
-          <div className="rounded-lg border-2 border-dashed border-gray-300 bg-white p-12 text-center">
-            <p className="text-lg font-medium text-gray-400">No posts yet</p>
-            <p className="mt-2 text-sm text-gray-400">
-              Posts for this community will appear here.
-            </p>
-          </div>
-        )}
-      </section>
+      <div className="grid gap-6 md:grid-cols-3">
+        <section className="md:col-span-2">
+          <h2 className="text-xl font-semibold text-gray-900">Posts</h2>
+          {communityPosts.length > 0 ? (
+            <div className="space-y-4">
+              {communityPosts.map((post) => (
+                <Link
+                  key={post.id}
+                  href={`/${community.slug}/posts/${post.id}`}
+                  className="block rounded-lg border border-gray-200 bg-white p-6 shadow-sm transition-shadow hover:shadow-md"
+                >
+                  <h3 className="text-lg font-semibold text-gray-900 hover:text-blue-600">
+                    {post.title}
+                  </h3>
+                  <p className="mt-2 text-sm text-gray-500">
+                    By {post.authorName} ·{" "}
+                    {post.createdAt.toLocaleDateString("en-US", {
+                      month: "short",
+                      day: "numeric",
+                      year: "numeric",
+                    })}
+                  </p>
+                </Link>
+              ))}
+            </div>
+          ) : (
+            <div className="rounded-lg border-2 border-dashed border-gray-300 bg-white p-12 text-center">
+              <p className="text-lg font-medium text-gray-400">No posts yet</p>
+              <p className="mt-2 text-sm text-gray-400">
+                Posts for this community will appear here.
+              </p>
+            </div>
+          )}
+        </section>
 
-      <section className="mt-10">
-        <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-xl font-semibold text-gray-900">Resources</h2>
-          <NewResourceForm communityId={community.id} />
-        </div>
+        <section>
+          <div className="mb-4 flex items-center justify-between">
+            <h2 className="text-xl font-semibold text-gray-900">Resources</h2>
+            <NewResourceForm communityId={community.id} />
+          </div>
 
-        <ResourceList resources={communityResources} />
-      </section>
+          <ResourceList resources={communityResources} />
+        </section>
+      </div>
     </div>
   );
 }
