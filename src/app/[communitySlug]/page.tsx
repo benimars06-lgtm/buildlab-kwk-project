@@ -18,7 +18,7 @@ import type { CommunityPageProps } from "@/types";
 // - Ticket #3 (Person C): Display a list of resources here ✅
 // - Ticket #4 (Person A): Add a "New Post" button and form ✅
 // - Ticket #6 (Person C): Add an "Add Resource" button and form ✅
-// - Ticket #10 (Person B): Improve the layout and styling
+// - Ticket #10 (Person B): Improve the layout and styling ✅
 // ============================================================
 
 export default async function CommunityPage({ params }: CommunityPageProps) {
