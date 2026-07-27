@@ -5,6 +5,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import CommunityNav from "@/components/CommunityNav";
 import NewResourceForm from "@/components/NewResourceForm";
+import ResourceSearch from "@/components/ResourceSearch";
 import type { CommunityPageProps } from "@/types";
 
 // ============================================================
@@ -63,7 +64,6 @@ export default async function CommunityPage({ params }: CommunityPageProps) {
       {/* See Tickets #6, and #10.                       */}
       {/* ====================================================== */}
       <section>
-
         {communityPosts.length > 0 ? (
           <div className="space-y-4">
             {communityPosts.map((post) => (
@@ -102,40 +102,7 @@ export default async function CommunityPage({ params }: CommunityPageProps) {
           <NewResourceForm communityId={community.id} />
         </div>
 
-        {communityResources.length > 0 ? (
-          <div className="space-y-4">
-            {communityResources.map((resource) => (
-              <div
-                key={resource.id}
-                className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm"
-              >
-                <h3 className="text-lg font-semibold text-gray-900">
-                  {resource.title}
-                </h3>
-                <p className="mt-2 text-sm text-gray-600">
-                  {resource.description}
-                </p>
-                <a
-                  href={resource.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="mt-4 inline-block text-sm font-medium text-blue-600 hover:text-blue-700 hover:underline"
-                >
-                  {resource.title}
-                </a>
-              </div>
-            ))}
-          </div>
-        ) : (
-          <div className="rounded-lg border-2 border-dashed border-gray-300 bg-white p-12 text-center">
-            <p className="text-lg font-medium text-gray-400">
-              No resources yet
-            </p>
-            <p className="mt-2 text-sm text-gray-400">
-              Resources for this community will appear here.
-            </p>
-          </div>
-        )}
+        <ResourceSearch resources={communityResources} />
       </section>
     </div>
   );
