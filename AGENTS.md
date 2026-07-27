@@ -10,7 +10,10 @@ This version has breaking changes — APIs, conventions, and file structure may 
 
 ## How to work with me
 
-- If anything in my request in unclear, ask clarifying questions before proceeding. Do not guess.
+- If anything in my request is unclear or ambiguous, ask clarifying questions before proceeding. Do not guess.
+
 - Always use Tailwind CSS for styling. Do not use inline styles or CSS modules.
+
 - Our auth system is client-side. Use the useAuth hook from src/lib/auth.tsx.
+
 - When creating new files, follow the existing project structure.

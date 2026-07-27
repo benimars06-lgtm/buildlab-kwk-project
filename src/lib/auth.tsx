@@ -46,12 +46,14 @@ if (
 
 type AuthContextType = {
   user: User | null;
+  isLoading: boolean;
   login: (user: User) => void;
   logout: () => void;
 };
 
 const AuthContext = createContext<AuthContextType>({
   user: null,
+  isLoading: true,
   login: () => {},
   logout: () => {},
 });
@@ -59,14 +61,18 @@ const AuthContext = createContext<AuthContextType>({
 export function AuthProvider({ children }: { children: ReactNode }) {
   const router = useRouter();
   const [user, setUser] = useState<User | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   // Restore login state from cookie on page load
   useEffect(() => {
     const cookieUserId = getUserIdFromCookieString(document.cookie);
     const cookieUser = getSeedUserById(cookieUserId);
     if (cookieUser) {
+      // Restoring state from the browser cookie requires synchronizing after mount.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setUser(cookieUser);
     }
+    setIsLoading(false);
   }, []);
 
   const login = (user: User) => {
@@ -82,8 +88,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const logout = () => {
     // Clear the cookie
-    document.cookie =
-      `${DEV_AUTH_COOKIE_NAME}=; path=/; max-age=0; samesite=lax`;
+    document.cookie = `${DEV_AUTH_COOKIE_NAME}=; path=/; max-age=0; samesite=lax`;
     setUser(null);
     startTransition(() => {
       router.refresh();
@@ -91,7 +96,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout }}>
+    <AuthContext.Provider value={{ user, isLoading, login, logout }}>
       {children}
     </AuthContext.Provider>
   );

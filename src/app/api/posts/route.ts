@@ -1,8 +1,33 @@
 import { NextResponse } from "next/server";
-import { eq } from "drizzle-orm";
+import { desc, eq } from "drizzle-orm";
 import { db } from "@/db";
 import { communities, posts } from "@/db/schema";
 import { getAuthUserId, getSeedUserById } from "@/lib/auth-session";
+
+export async function GET(request: Request) {
+  const authorId = getAuthUserId(request);
+
+  if (!authorId || !getSeedUserById(authorId)) {
+    return NextResponse.json(
+      { error: "You must be logged in to view your posts." },
+      { status: 401 }
+    );
+  }
+
+  const userPosts = await db
+    .select({
+      id: posts.id,
+      title: posts.title,
+      communityName: communities.name,
+      communitySlug: communities.slug,
+    })
+    .from(posts)
+    .innerJoin(communities, eq(posts.communityId, communities.id))
+    .where(eq(posts.authorId, authorId))
+    .orderBy(desc(posts.createdAt));
+
+  return NextResponse.json(userPosts);
+}
 
 export async function POST(request: Request) {
   const authorId = getAuthUserId(request);
@@ -10,7 +35,7 @@ export async function POST(request: Request) {
   if (!authorId || !getSeedUserById(authorId)) {
     return NextResponse.json(
       { error: "You must be logged in to create a post." },
-      { status: 401 },
+      { status: 401 }
     );
   }
 
@@ -23,7 +48,7 @@ export async function POST(request: Request) {
   if (!trimmedTitle || !trimmedContent || !trimmedCommunityId) {
     return NextResponse.json(
       { error: "title, content, and communityId are required." },
-      { status: 400 },
+      { status: 400 }
     );
   }
 
@@ -36,7 +61,7 @@ export async function POST(request: Request) {
   if (!community) {
     return NextResponse.json(
       { error: "Community not found." },
-      { status: 404 },
+      { status: 404 }
     );
   }
 
