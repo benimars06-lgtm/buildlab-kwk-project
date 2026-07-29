@@ -17,8 +17,8 @@ import type { CommunityPageProps } from "@/types";
 // - Ticket #1 (Person A): Display a list of posts here ✅
 // - Ticket #3 (Person C): Display a list of resources here ✅
 // - Ticket #4 (Person A): Add a "New Post" button and form ✅
-// - Ticket #6 (Person C): Add an "Add Resource" button and form
-// - Ticket #10 (Person B): Improve the layout and styling
+// - Ticket #6 (Person C): Add an "Add Resource" button and form ✅
+// - Ticket #10 (Person B): Improve the layout and styling ✅
 // ============================================================
 
 export default async function CommunityPage({ params }: CommunityPageProps) {
@@ -54,8 +54,14 @@ export default async function CommunityPage({ params }: CommunityPageProps) {
   return (
     <div>
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900">{community.name}</h1>
-        <p className="mt-2 text-gray-600">{community.description}</p>
+        <p className="text-sm font-medium text-blue-600">Welcome to</p>
+        <h1 className="mt-1 text-3xl font-bold text-gray-900">
+          {community.name}
+        </h1>
+        <p className="mt-2 max-w-3xl text-gray-600">{community.description}</p>
+        <p className="mt-2 text-sm text-gray-500">
+          Connect with curious minds and discover what&apos;s possible together.
+        </p>
       </div>
 
       <CommunityNav slug={community.slug} activeTab="home" />
@@ -63,45 +69,46 @@ export default async function CommunityPage({ params }: CommunityPageProps) {
       {/* ====================================================== */}
       {/* See Tickets #6, and #10.                       */}
       {/* ====================================================== */}
-      <section>
-        {communityPosts.length > 0 ? (
-          <div className="space-y-4">
-            {communityPosts.map((post) => (
-              <Link
-                key={post.id}
-                href={`/${community.slug}/posts/${post.id}`}
-                className="block rounded-lg border border-gray-200 bg-white p-6 shadow-sm transition-shadow hover:shadow-md"
-              >
-                <h3 className="text-lg font-semibold text-gray-900 hover:text-blue-600">
-                  {post.title}
-                </h3>
-                <p className="mt-2 text-sm text-gray-500">
-                  By {post.authorName} ·{" "}
-                  {post.createdAt.toLocaleDateString("en-US", {
-                    month: "short",
-                    day: "numeric",
-                    year: "numeric",
-                  })}
-                </p>
-              </Link>
-            ))}
-          </div>
-        ) : (
-          <div className="rounded-lg border-2 border-dashed border-gray-300 bg-white p-12 text-center">
-            <p className="text-lg font-medium text-gray-400">No posts yet</p>
-            <p className="mt-2 text-sm text-gray-400">
-              Posts for this community will appear here.
-            </p>
-          </div>
-        )}
-      </section>
+      <div className="grid gap-6 md:grid-cols-3">
+        <section className="md:col-span-2">
+          <h2 className="mb-4 text-xl font-semibold text-gray-900">Posts</h2>
+          {communityPosts.length > 0 ? (
+            <div className="space-y-4">
+              {communityPosts.map((post) => (
+                <Link
+                  key={post.id}
+                  href={`/${community.slug}/posts/${post.id}`}
+                  className="group block rounded-lg border border-gray-200 bg-white p-6 shadow-sm transition-shadow hover:shadow-md"
+                >
+                  <h3 className="text-lg font-semibold text-gray-900 group-hover:text-blue-600">
+                    {post.title}
+                  </h3>
+                  <p className="mt-2 text-sm text-gray-500">
+                    By {post.authorName} ·{" "}
+                    {post.createdAt.toLocaleDateString("en-US", {
+                      month: "short",
+                      day: "numeric",
+                      year: "numeric",
+                    })}
+                  </p>
+                </Link>
+              ))}
+            </div>
+          ) : (
+            <div className="rounded-lg border-2 border-dashed border-gray-300 bg-white p-12 text-center">
+              <p className="text-lg font-medium text-gray-400">No posts yet</p>
+              <p className="mt-2 text-sm text-gray-400">
+                Posts for this community will appear here.
+              </p>
+            </div>
+          )}
+        </section>
 
-      <section className="mt-10">
-        <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-xl font-semibold text-gray-900">Resources</h2>
-          <NewResourceForm communityId={community.id} />
-        </div>
-
+        <section>
+          <div className="mb-4 flex items-center justify-between">
+            <h2 className="text-xl font-semibold text-gray-900">Resources</h2>
+            <NewResourceForm communityId={community.id} />
+          </div>
         <ResourceSearch resources={communityResources} />
       </section>
     </div>
