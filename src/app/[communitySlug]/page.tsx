@@ -5,7 +5,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import CommunityNav from "@/components/CommunityNav";
 import NewResourceForm from "@/components/NewResourceForm";
-import ResourceList from "@/components/ResourceList";
+import ResourceSearch from "@/components/ResourceSearch";
 import type { CommunityPageProps } from "@/types";
 
 // ============================================================
@@ -109,10 +109,8 @@ export default async function CommunityPage({ params }: CommunityPageProps) {
             <h2 className="text-xl font-semibold text-gray-900">Resources</h2>
             <NewResourceForm communityId={community.id} />
           </div>
-
-          <ResourceList resources={communityResources} />
-        </section>
-      </div>
+        <ResourceSearch resources={communityResources} />
+      </section>
     </div>
   );
 }
