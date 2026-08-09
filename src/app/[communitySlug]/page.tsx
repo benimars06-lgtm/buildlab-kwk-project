@@ -112,5 +112,6 @@ export default async function CommunityPage({ params }: CommunityPageProps) {
         <ResourceSearch resources={communityResources} />
       </section>
     </div>
+  </div>  
   );
 }
