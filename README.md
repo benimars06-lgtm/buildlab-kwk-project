@@ -1,3 +1,6 @@
+***Part of a Project I did With Kode With Klossy's Summer AI Build Lab Program***
+In collaboration with two other members, I used Codex to create a functional Event object and RSVP system to join the event. This was my first time experimenting with backend technologies like Neon Postgres and DrizzleORM, as well as using React.js and Typescript for the first time. This project was forked from that orginal repository.
+
 # Community Hub 🏘️
 
 A community platform where people can share posts, organize events, and collect resources. Built with Next.js, TypeScript, Tailwind CSS, and Neon Postgres.
